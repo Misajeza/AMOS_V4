@@ -8,40 +8,61 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace AMOS_V4
 {
-    internal class Lecture
+
+    public class Lecture
     {
-        public Lecture(string path) {
-            string Jstring = File.ReadAllText(path);
-            Questions = JsonSerializer.Deserialize<List<Question>>(Jstring)!;
+        public Lecture(string path)
+        {
+            var zippedData = new AmosFile(path);
+            Questions = zippedData.ReadJson<List<Question>>();
+            Images = zippedData.ReadImages();
+            Name = Path.GetFileNameWithoutExtension(path);
         }
-        public List<Question> Questions;
+        public Lecture (List<Question> questions, Dictionary<string, Bitmap> Images, string name) {this.Questions = questions; this.Images = Images; this.Name = name; }
+        public List<Question> Questions { get; set;}
+        public Dictionary<string, Bitmap> Images { get; set; }
+        public string Name { get; set; }
+        public static Lecture Empty { get { return new Lecture(new List<Question>(), new Dictionary<string, Bitmap>(),""); } }
+        public void NewQuestion() 
+        {
+            List<QuestionLine> questionLines = new List<QuestionLine>();
+            questionLines.Add(new QuestionLine("", new List<string>(), false, false));
+            Questions.Add(new Question("", 5, new List<string>(), questionLines));
+        }
     }
-    internal class Question
+    public class Question
     {
-        public Question(string Name, float Mark, string[] Images, QuestionLine[] QuestionLines) 
+        public Question(string Name, float Mark, List<string> ImageNames, List<QuestionLine> QuestionLines) 
         {
             this.Name = Name;
             this.Mark = Mark;
-            this.Images = Images;
+            this.ImageNames = ImageNames;
             this.QuestionLines = QuestionLines;
         }
         public string Name { get; set; }
         public float Mark { get; set; }
-        public string[] Images { get; set; }
-        public QuestionLine[] QuestionLines { get; set; }
+        public List <string> ImageNames { get; set; }
+        public List <QuestionLine> QuestionLines { get; set; }
+
+        public void AddLine()
+        {
+            List<string> answers = new List<string>();
+            QuestionLines.Add(new QuestionLine("", answers, false, false));
+        }
     }
-    internal class QuestionLine
+    public class QuestionLine
     {
-        public QuestionLine(string Query, string[] Answer, bool Swapable, bool CharSize) 
+        public QuestionLine(string Query, List<string> Answer, bool Swapable, bool CharSize) 
         {
             this.Query = Query;
             this.Answer = Answer;
             this.Swapable = Swapable;
             this.CharSize = CharSize;
+            
         }
         public bool CharSize { get; set; }
         public bool Swapable { get; set; }
         public string Query { get; set; }
-        public string[] Answer { get; set; }
+        public List <string> Answer { get; set; }
     }
 }
