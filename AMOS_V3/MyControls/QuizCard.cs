@@ -97,6 +97,7 @@ namespace AMOS_V4
             if (quiz.Mode == Quiz.QuizMode.Edit)
             {
                 EditQuizLine editQuizLine = new EditQuizLine(questionLine);
+                editQuizLine.Close_Click += CloseLine;
                 editQuizLine.Width = flowLayoutPanel1.ClientSize.Width;
                 editQuizLines.Add(editQuizLine);
                 flowLayoutPanel1.Controls.Add(editQuizLine);
@@ -110,6 +111,12 @@ namespace AMOS_V4
             }
 
 
+        }
+        public void CloseLine(object sender, EventArgs e)
+        {
+            EditQuizLine EQLsender = sender as EditQuizLine;
+            quiz.Question.RemoveLine(EQLsender.TabIndex);
+            Refresh();
         }
         private void moveImageLeft(object sender, EventArgs e)
         {

@@ -17,9 +17,9 @@ namespace AMOS_V4
         Quiz quiz = new Quiz();
         bool empty = true;
 
-        int quizCardWidth = (int)Math.Round(Screen.PrimaryScreen.WorkingArea.Height * 0.53);
-        int quizCardHeight = (int)Math.Round(Screen.PrimaryScreen.WorkingArea.Height * 0.70);
-        int minSidePanelWidth = Screen.PrimaryScreen.Bounds.Width / 15;
+        int quizCardWidth = (int)Math.Round(Screen.PrimaryScreen.WorkingArea.Height * 0.61);
+        int quizCardHeight = (int)Math.Round(Screen.PrimaryScreen.WorkingArea.Height * 0.78);
+        int minSidePanelWidth = Screen.PrimaryScreen.Bounds.Width / 10;
         int maxSidePanelWidth = Screen.PrimaryScreen.Bounds.Width / 6;
 
         public void ChckAreLectures(object sender, EventArgs e)
@@ -35,9 +35,10 @@ namespace AMOS_V4
             InitializeComponent();
             MouseClick += clickSomewhere;
             quizCard1.Quiz = quiz;
+            quizCard1.NewLineButton.Click += AddLine_Click;
             Controls.Remove(quizCard1);
             sidePanel1.quiz = quiz;
-            openFileDialog1.Multiselect = true;
+            //openFileDialog1.Multiselect = true;
             this.ClientSize = new Size(quizCardWidth + minSidePanelWidth, quizCardHeight);
             this.MinimumSize = this.Size;
             sidePanel1.Load += sidePanel1_Load;
@@ -45,7 +46,7 @@ namespace AMOS_V4
             quiz.LectureOpened += ChckAreLectures;
             quiz.LectureChanged += SelectionChanged;
             quizCard1.EditorImageBox.button4.Click += addImage;
-            openFileDialog1.Filter  = "|*.amos|*.AMOS|*.Amos";
+            //openFileDialog1.Filter  = "|*.amos|*.AMOS|*.Amos";
             openImageDialog.Filter  = "|*.jpg|*.JPG|*.png";
             //quizCard1 = new QuizCard(quiz);
             //sidePanel1 = new SidePanel(quiz);
@@ -79,21 +80,37 @@ namespace AMOS_V4
         }
         private void OpenButtonOnClick(object sender, EventArgs e)
         {
-            openFileDialog1.ShowDialog();
-            if (openFileDialog1.FileNames[0] == "") return;
-
-            string[] paths = openFileDialog1.FileNames;
-            bool isEmpty = quiz.Lectures.IsEmpty;
-            for (int i = 0; i < paths.Length; i++)
+            using (var openFileDialog = new OpenFileDialog())
             {
-                quiz.OpenLecture(paths[i]);
-                sidePanel1.Refresh();
-            }
+                openFileDialog.Filter = "|*.amos|*.AMOS|*.Amos";
+                openFileDialog.Multiselect = true;
+                // Načtení uložené cesty z nastavení
+                openFileDialog.InitialDirectory = string.IsNullOrEmpty(Settings.Default.LastOpenFilePath)
+                    ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    : Settings.Default.LastOpenFilePath;
 
-            if (isEmpty)
-            {
-                this.Controls.Add(quizCard1);
-                ChangeCard();
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Uložení naposledy použitého adresáře
+                    Settings.Default.LastOpenFilePath = System.IO.Path.GetDirectoryName(openFileDialog.FileName);
+                    Settings.Default.Save();
+
+                    string[] paths = openFileDialog.FileNames;
+                    bool isEmpty = quiz.Lectures.IsEmpty;
+                    for (int i = 0; i < paths.Length; i++)
+                    {
+                        quiz.OpenLecture(paths[i]);
+                        sidePanel1.Refresh();
+                    }
+
+                    if (isEmpty)
+                    {
+                        this.Controls.Add(quizCard1);
+                        ChangeCard();
+                    }
+                    quizCard1.Location = new Point(minSidePanelWidth + ((ClientSize.Width - minSidePanelWidth) / 2 - quizCardWidth / 2), ClientSize.Height / 2 - quizCardHeight / 2);
+                    sidePanel1.Width = quizCard1.Location.X;
+                }
             }
         }
         private void EditButtonOnClick(object sender, EventArgs e)
@@ -102,15 +119,15 @@ namespace AMOS_V4
             {
                 quiz.Mode = Quiz.QuizMode.Normal;
                 sidePanel1.button2.Text = "Upravit";
-                quizCard1.button1.Click -= AddLine_Click;
-                quizCard1.button1.Click += ChckAnswersButton_Click;
+                //quizCard1.button1.Click -= AddLine_Click;
+                //quizCard1.button1.Click += ChckAnswersButton_Click;
             }
             else
             {
                 quiz.Mode = Quiz.QuizMode.Edit;
                 sidePanel1.button2.Text = "Hotovo";
-                quizCard1.button1.Click -= ChckAnswersButton_Click;
-                quizCard1.button1.Click += AddLine_Click;
+                //quizCard1.button1.Click -= ChckAnswersButton_Click;
+                //quizCard1.button1.Click += AddLine_Click;
             }
             sidePanel1.Refresh();
             quizCard1.Refresh();
@@ -121,11 +138,10 @@ namespace AMOS_V4
         #region QuestionCard Events
         private void QuizCard_Load(object sender, EventArgs e)
         {
-            quizCard1.NewLineButton.Click += AddLine_Click;
-            if (quiz.Mode == Quiz.QuizMode.Edit)
-                quizCard1.button1.Click += AddLine_Click;
-            else
-                quizCard1.button1.Click += ChckAnswersButton_Click;
+            //if (quiz.Mode == Quiz.QuizMode.Edit)
+            //    quizCard1.button1.Click += AddLine_Click;
+            //else
+            quizCard1.button1.Click += ChckAnswersButton_Click;
         }
         private void ChckAnswersButton_Click(object sender, EventArgs e)
         {
@@ -143,12 +159,33 @@ namespace AMOS_V4
         }
         private void addImage(object sender, EventArgs e)
         {
-            openImageDialog.ShowDialog();
-            string path = openImageDialog.FileName;
-            quiz.AddImage(path);
-            quiz.SelectImage(quiz.Question.ImageNames.Count - 1);
-            quizCard1.EditorImageBox.pictureBox1.Image = quiz.Image;
-            quizCard1.ChckImageButtons();
+            using (var openImageDialog = new OpenFileDialog())
+            {
+                openImageDialog.Filter = "*.*|*.jpg|*.png|"; //tohle nefunguje jak má
+                openImageDialog.Title = "Importovat Obrázky";
+                openImageDialog.Multiselect = true;
+                // Načtení uložené cesty z nastavení
+                openImageDialog.InitialDirectory = string.IsNullOrEmpty(Settings.Default.LastOpenImagePath)
+                    ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    : Settings.Default.LastOpenImagePath;
+
+                if (openImageDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Uložení naposledy použitého adresáře
+                    Settings.Default.LastOpenImagePath = System.IO.Path.GetDirectoryName(openImageDialog.FileName);
+                    Settings.Default.Save();
+                    string[] paths = openImageDialog.FileNames;
+                    bool isEmpty = quiz.Lectures.IsEmpty;
+                    for (int i = 0; i < paths.Length; i++)
+                    {
+                        string path = openImageDialog.FileNames[i];
+                        quiz.AddImage(path);
+                        quiz.SelectImage(quiz.Question.ImageNames.Count - 1);
+                        quizCard1.EditorImageBox.pictureBox1.Image = quiz.Image;
+                        quizCard1.ChckImageButtons();
+                    }
+                }
+            }
         }
         private void clickSomewhere(object sender, EventArgs e) 
         { 
@@ -163,7 +200,7 @@ namespace AMOS_V4
             if (quizCard1 != null)
             {
                 quizCard1.Size = new Size(quizCardWidth, quizCardHeight);
-                quizCard1.Location = new Point(minSidePanelWidth, 0);
+                quizCard1.Location = new Point(minSidePanelWidth + ((ClientSize.Width - minSidePanelWidth) / 2 - quizCardWidth / 2), 0);
             }
         }
 

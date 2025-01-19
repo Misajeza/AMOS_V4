@@ -49,6 +49,10 @@ namespace AMOS_V4
             List<string> answers = new List<string>();
             QuestionLines.Add(new QuestionLine("", answers, false, false));
         }
+        public void RemoveLine(int index)
+        {
+            QuestionLines.RemoveAt(index);
+        }
     }
     public class QuestionLine
     {

@@ -73,6 +73,9 @@ namespace AMOS_V4
         }
         public void CloseLecture(int indx) {
             Lectures.Close(indx);
+            if (Lectures.Count >0)
+                SelectLecture(0);
+            else SelectedLecture = null;
             LectureClosed?.Invoke(this, EventArgs.Empty);
         }
         public void RandomChangeSellection()
@@ -310,6 +313,7 @@ namespace AMOS_V4
                 keys.Remove(index);
             }
             correction(index);
+            
         }
         public void NewLecture(Lecture lecture)
         {

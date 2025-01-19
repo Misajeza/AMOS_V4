@@ -52,9 +52,10 @@ namespace AMOS_V4
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.Padding = new Padding(20);
             tableLayoutPanel1.RowCount = 3;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 45F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 47.6648369F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 7.41758251F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 44.96294F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 47.6255875F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 7.411474F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(669, 768);
             tableLayoutPanel1.TabIndex = 0;
             // 

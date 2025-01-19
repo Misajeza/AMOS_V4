@@ -33,21 +33,24 @@
             betterTextBox1 = new BetterTextBox();
             betterTextBox2 = new BetterTextBox();
             button2 = new Button();
+            button3 = new Button();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 4;
+            tableLayoutPanel1.ColumnCount = 5;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 3.5F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 3.5F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 3F));
             tableLayoutPanel1.Controls.Add(button1, 2, 0);
             tableLayoutPanel1.Controls.Add(betterTextBox1, 1, 0);
             tableLayoutPanel1.Controls.Add(betterTextBox2, 0, 0);
             tableLayoutPanel1.Controls.Add(button2, 3, 0);
+            tableLayoutPanel1.Controls.Add(button3, 4, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(4, 5, 4, 5);
@@ -64,7 +67,7 @@
             button1.Location = new Point(664, 0);
             button1.Margin = new Padding(0);
             button1.Name = "button1";
-            button1.Size = new Size(36, 56);
+            button1.Size = new Size(25, 56);
             button1.TabIndex = 0;
             button1.Text = "->\\n<-";
             button1.UseVisualStyleBackColor = true;
@@ -110,13 +113,25 @@
             // button2
             // 
             button2.Dock = DockStyle.Fill;
-            button2.Location = new Point(700, 0);
+            button2.Location = new Point(689, 0);
             button2.Margin = new Padding(0);
             button2.Name = "button2";
-            button2.Size = new Size(38, 56);
+            button2.Size = new Size(25, 56);
             button2.TabIndex = 4;
             button2.Text = "Aa";
             button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            button3.Dock = DockStyle.Fill;
+            button3.Location = new Point(714, 0);
+            button3.Margin = new Padding(0);
+            button3.Name = "button3";
+            button3.Size = new Size(24, 56);
+            button3.TabIndex = 5;
+            button3.Text = "X";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // EditQuizLine
             // 
@@ -135,5 +150,6 @@
         public BetterTextBox betterTextBox1;
         private BetterTextBox betterTextBox2;
         private Button button2;
+        private Button button3;
     }
 }

@@ -78,7 +78,7 @@ namespace AMOS_V4
             flowLayoutPanel1.Controls.Clear();
             for (int i = 0; i < quiz.Lectures.Count; i++)
             {
-                if (FileToBeNamed&&i== quiz.Lectures.Count-1)
+                if (FileToBeNamed && i == quiz.Lectures.Count - 1)
                     break;
                 AddLecture(i, quiz.Lectures.GetName(i));
             }
@@ -86,7 +86,7 @@ namespace AMOS_V4
             {
                 if (FileToBeNamed)
                     flowLayoutPanel1.Controls.Add(FilenameEntry);
-                else 
+                else
                     flowLayoutPanel1.Controls.Add(NewFileButton);
             }
             flowLayoutPanel1_Resize(this, new EventArgs());
@@ -129,17 +129,17 @@ namespace AMOS_V4
             disableAllFilesButtons();
             FilenameEntry.Focus();
         }
-        private void setFileName(object sender, EventArgs e) 
+        private void setFileName(object sender, EventArgs e)
         {
-            quiz.Lectures.SetName(quiz.Lectures.Count-1,FilenameEntry.Texts);
-            FileToBeNamed= false;
+            quiz.Lectures.SetName(quiz.Lectures.Count - 1, FilenameEntry.Texts);
+            FileToBeNamed = false;
             FilenameEntry.Texts = string.Empty;
             enableAllFilesButtons();
             Refresh();
         }
         private void nameEntry_KeyPressed(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter) 
+            if (e.KeyCode == Keys.Enter)
             {
                 ActiveControl = null;
                 e.Handled = true;
@@ -152,9 +152,9 @@ namespace AMOS_V4
         }
         private void disableAllFilesButtons()
         {
-            foreach (Control child in flowLayoutPanel1.Controls) 
+            foreach (Control child in flowLayoutPanel1.Controls)
             {
-                if (child!=FilenameEntry) child.Enabled = false;
+                if (child != FilenameEntry) child.Enabled = false;
             }
         }
         private void enableAllFilesButtons()
