@@ -32,11 +32,8 @@
             sidePanel1 = new SidePanel();
             quizCard1 = new QuizCard();
             openImageDialog = new OpenFileDialog();
+            emptyFileDialog1 = new MyControls.EmptyFileDialog();
             SuspendLayout();
-            // 
-            // openFileDialog1
-            // 
-            openFileDialog1.FileName = "";
             // 
             // sidePanel1
             // 
@@ -58,20 +55,25 @@
             quizCard1.TabIndex = 1;
             quizCard1.Load += QuizCard_Load;
             // 
-            // openImageDialog
+            // emptyFileDialog1
             // 
-            openImageDialog.FileName = "";
+            emptyFileDialog1.Location = new Point(449, 343);
+            emptyFileDialog1.Name = "emptyFileDialog1";
+            emptyFileDialog1.Size = new Size(518, 315);
+            emptyFileDialog1.TabIndex = 2;
             // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
             BackColor = Color.FromArgb(64, 64, 64);
             ClientSize = new Size(1155, 1034);
+            Controls.Add(emptyFileDialog1);
             Controls.Add(quizCard1);
             Controls.Add(sidePanel1);
             Margin = new Padding(4);
             Name = "Form1";
             Text = "Form1";
+            FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             SizeChanged += Form1_SizeChanged;
             ResumeLayout(false);
@@ -84,5 +86,6 @@
         private OpenFileDialog openFileDialog1;
         private ToolStrip toolStrip1;
         private OpenFileDialog openImageDialog;
+        private MyControls.EmptyFileDialog emptyFileDialog1;
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace AMOS_V4
 {
@@ -14,26 +15,30 @@ namespace AMOS_V4
         public Quiz() 
         {
             Lectures = new Files();
+            lastSelected = Question.Empty;
         }
 
         //private List <string> LecturePaths = new List<string>();
 
         public Lecture ?SelectedLecture;
         public Files Lectures;
+        public int ConservationValue = 5;
 
-        private QuizMode mode = QuizMode.Normal;
+        private QuizMode mode = QuizMode.Smart;
 
         //string selLecturePath = string.Empty;
         int selLectureIndx = -1;
         int selQuestionIndx = -1;
         int selImageIndx = -1;
 
+        Question lastSelected;
+
         Random random = new Random();
         public Bitmap? Image
         {
             get 
             {
-                if (SelectedLecture == null) return null;
+                if (SelectedLecture == null || Question == null) return null;
                 if (SelectedLecture.Questions[selQuestionIndx].ImageNames.Count==0) return null;
                 else return SelectedLecture.Images[SelectedLecture.Questions[selQuestionIndx].ImageNames[selImageIndx]];
             }
@@ -44,7 +49,7 @@ namespace AMOS_V4
             }
         }
         public Question? Question {
-            get { if (SelectedLecture == null)return null;
+            get { if (SelectedLecture == null || selQuestionIndx == -1)return null;
                 return SelectedLecture.Questions[selQuestionIndx]; }
             set { if (SelectedLecture != null)
                 SelectedLecture.Questions[selQuestionIndx] = value; }
@@ -80,8 +85,7 @@ namespace AMOS_V4
         }
         public void RandomChangeSellection()
         {
-            if (LectureChanged != null)
-                LectureChanged.Invoke(this, EventArgs.Empty);
+
             if (Lectures.Count < 1) 
             {
                 SelectedLecture = Lecture.Empty;
@@ -89,8 +93,25 @@ namespace AMOS_V4
             }
             selLectureIndx = random.Next(0, Lectures.Count);
             SelectedLecture = Lectures.GetLecture(selLectureIndx,true);
-            selQuestionIndx = random.Next(SelectedLecture.Questions.Count);
-            selImageIndx = random.Next(SelectedLecture.Questions[selQuestionIndx].ImageNames.Count);
+            if (SelectedLecture.Questions.Count > 0)
+            {
+                while (true) 
+                {
+                    if (Mode == QuizMode.Normal)
+                        selQuestionIndx = random.Next(SelectedLecture.Questions.Count);
+                    else
+                        selQuestionIndx = weightedChoice(SelectedLecture.Questions);
+                    selImageIndx = random.Next(SelectedLecture.Questions[selQuestionIndx].ImageNames.Count);
+                    if (SelectedLecture.Questions.Count == 1 || lastSelected != Question) break ;
+                }
+                lastSelected = Question;
+            }
+            else
+                selQuestionIndx = -1;
+            if (LectureChanged != null)
+                LectureChanged.Invoke(this, EventArgs.Empty);
+            if (QuestionChanged != null)
+                QuestionChanged.Invoke(this, EventArgs.Empty);
         }
         public void SellectNextQuestion() {
             if (SelectedLecture != null && selQuestionIndx < SelectedLecture.Questions.Count()-1)
@@ -133,16 +154,45 @@ namespace AMOS_V4
             SelectedLecture.NewQuestion();
             SelectQuestion(SelectedLecture.Questions.Count-1);
         }
+        public void RemoveQuestion(Question question)
+        {
+            foreach (string imagename in Question.ImageNames)
+                SelectedLecture.Images.Remove(imagename); ;
+            SelectedLecture.Questions.Remove(question);
+
+            if (selQuestionIndx >= SelectedLecture.Questions.Count)
+                selQuestionIndx--;
+            if (selQuestionIndx < 0)
+                selQuestionIndx++;
+            if (SelectedLecture.Questions.Count==0)
+                selQuestionIndx = -1;
+            else
+                selImageIndx = random.Next(Question.ImageNames.Count);
+            if (QuestionChanged != null)
+                QuestionChanged.Invoke(this, new EventArgs());
+        }
         public void SelectLecture(int indx)
         {
+            selLectureIndx = indx;
             SelectedLecture = Lectures.GetLecture(indx,true);
-            selQuestionIndx = 0;
-            selImageIndx = 0;
+            if (SelectedLecture.Questions.Count > 0) {
+                selQuestionIndx = 0;
+                selImageIndx = 0;
+            
+            }
+            else 
+            {
+                selQuestionIndx = -1;
+                selImageIndx = 0;
+            }
+                
+            
             if (LectureChanged != null)
                 LectureChanged.Invoke(this, new EventArgs());
         }
         public void SelectQuestion(int index)
         {
+            if (SelectedLecture.Questions.Count==0) return;
             selQuestionIndx = index;
             selImageIndx = random.Next(Question.ImageNames.Count);
             if (QuestionChanged != null)
@@ -154,7 +204,7 @@ namespace AMOS_V4
         }
         public void AddImage(string path)
         {
-            string fileName = Path.GetFileName(path);
+            string fileName = Path.GetFileNameWithoutExtension(path);
             if (fileName != "") {
                 if (SelectedLecture.Images.ContainsKey(fileName))
                 {
@@ -162,8 +212,8 @@ namespace AMOS_V4
                     while (SelectedLecture.Images.ContainsKey(fileName+extension))  extension++;
                     fileName += extension;
                 }
-                SelectedLecture.Images.Add(fileName, resize(new Bitmap(path), 720));
-                Question.ImageNames.Add(Path.GetFileName(fileName));
+                SelectedLecture.Images.Add(fileName + ".jpg", resize(new Bitmap(path), 720));
+                Question.ImageNames.Add(Path.GetFileName(fileName + ".jpg"));
             }
         }
         public void RemoveImage(int index)
@@ -206,84 +256,25 @@ namespace AMOS_V4
             }
             return Outp;
         }
+        private static int weightedChoice(List<Question> questions)
+        {
+            Random random = new Random();
+            int selected = -1;
+            int bestScore = 0;
+            for (int i = 0; i < questions.Count; i++)
+            {
+                Question question = questions[i];
+                int s = random.Next(0, (int)Math.Round(question.Mark * 100));
+                if (bestScore <= s)
+                {
+                    selected = i;
+                    bestScore = s;
+                }
+            }
+            return selected;
+        }
     }
-    //public class Lectures
-    //{
-    //    private List<string> paths;
-    //    private List<int> keys;
-    //    private List<Lecture> loaded;
-    //    //private Dictionary<int, Lecture> loaded;
 
-    //    public Lectures() 
-    //    {
-    //        this.paths = new List<string>();
-    //        this.keys = new List<int>();
-    //        this.loaded  = new List<Lecture>();
-    //        //this.loaded = new Dictionary<int, Lecture>();
-    //    }
-    //    public void SetNew(Lecture Lecture)
-    //    {
-    //        loaded.Add(Lecture);
-    //        keys.Add(paths.Count-1);
-    //        paths.Add("<Nový Soubor>");
-    //    }
-    //    public void Open(string path)
-    //    {
-    //        paths.Add(path);
-    //    }
-    //    public void Close(int  index)
-    //    {
-    //        if (IsLoaded(index))
-    //        {
-
-    //            loaded.RemoveAt(keys[index]);
-    //            keys.Remove(index);
-
-    //        }
-    //        correction(index);
-    //        paths.RemoveAt(index);
-    //    }
-    //    public void Load(int index)
-    //    {
-    //        loaded.Add(new Lecture(paths[index]));
-    //        keys.Add(index);
-    //    }
-    //    public int Count { get => paths.Count(); }
-    //    public string LastPath { get => paths.Last(); }
-    //    public string FirstPath { get => paths.First(); }
-    //    public bool IsEmpty { get => paths.Count() < 1; }
-    //    public string GetName(int index) {
-    //        if (paths[index].Contains("<")) return paths[index].Substring(1, paths[index].Length - 2);
-    //        return Path.GetFileNameWithoutExtension(paths[index]);
-    //    }
-    //    public Lecture GetLecture(int index)
-    //    {
-    //        if (IsLoaded(index)) return this.loaded[index];
-    //        else
-    //        {
-    //            Load(index);
-    //            return this.loaded[index];
-    //        }
-    //    }
-    //    public bool IsLoaded(int index) => keys.Contains(index);
-    //    public bool HavePath(int index) => !paths[index].Contains('<');
-    //    public void Save(int index) 
-    //    {
-    //        if (!IsLoaded(index)) return;
-
-    //    }//WIP
-    //    public void SetPath(int index, string path)
-    //    {
-    //        paths[index] = path;
-    //    }
-    //    private void correction(int removedIndex)
-    //    {
-    //        for (int i = 0;i<keys.Count;i++) {
-    //            if (keys[i] > removedIndex) keys[i]--;
-    //        }
-    //    }
-
-    //}
     public class Files
     {
         private List<string> paths;
@@ -315,6 +306,19 @@ namespace AMOS_V4
             correction(index);
             
         }
+        public void Save(int  index)
+        {
+            string directory = GetPath(keys[index]);
+            AmosFile.CreateZippedData(directory, loaded[index].Images, loaded[index].Questions);
+        }
+        public void SaveAll() 
+        { 
+            foreach (var item in loaded.Select((value, i) => new { i, value }))
+            {
+                string directory = GetPath(keys[item.i]);
+                AmosFile.CreateZippedData(directory, item.value.Images, item.value.Questions);
+            }
+        }
         public void NewLecture(Lecture lecture)
         {
             paths.Add("<NewFile>");
@@ -334,6 +338,10 @@ namespace AMOS_V4
                 return paths[index];
             else
                 throw new Exception("File have not path");
+        }
+        public void SetPath(int index, string path)
+        {
+            paths[index] = path;
         }
         public string GetName(int index) 
         {
@@ -361,6 +369,13 @@ namespace AMOS_V4
         public void Unload(int index) { 
             loaded.RemoveAt(keys.IndexOf(index));
             keys.Remove(index); 
+        }
+        public void UnloadAll()
+        {
+            for (int i = 0; i < loaded.Count; i++)
+            {
+                loaded.RemoveAt(i); keys.RemoveAt(i);
+            }
         }
         public bool IsLoaded(int index)
         {

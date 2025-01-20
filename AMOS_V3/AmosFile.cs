@@ -27,7 +27,8 @@ public class AmosFile
                 using (var entryStream = zipEntry.Open())
                 {
                     //entryStream.Write(imageEntry.Value, 0, imageEntry.Value.Length);
-                    imageEntry.Value.Save(entryStream, ImageFormat.Jpeg);
+                    Bitmap imageToSave = new Bitmap(imageEntry.Value);
+                    imageToSave.Save(entryStream, ImageFormat.Jpeg);
                 }
             }
 

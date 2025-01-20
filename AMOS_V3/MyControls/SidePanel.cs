@@ -30,6 +30,7 @@ namespace AMOS_V4
         {
             InitializeComponent();
             button2.Text = "Upravit";
+            button3.Text = "Uložit vše";
             NewFileButton.BackColor = Color.White;
             NewFileButton.Text = "Nový";
             NewFileButton.Size = new Size(this.Width, Screen.PrimaryScreen.WorkingArea.Height / 25);
@@ -81,6 +82,7 @@ namespace AMOS_V4
                 if (FileToBeNamed && i == quiz.Lectures.Count - 1)
                     break;
                 AddLecture(i, quiz.Lectures.GetName(i));
+                
             }
             if (quiz.Mode == Quiz.QuizMode.Edit)
             {
@@ -88,7 +90,9 @@ namespace AMOS_V4
                     flowLayoutPanel1.Controls.Add(FilenameEntry);
                 else
                     flowLayoutPanel1.Controls.Add(NewFileButton);
+                button3.Show();
             }
+            else { button3.Hide(); }
             flowLayoutPanel1_Resize(this, new EventArgs());
         }
         private void SelectLecture(object sender, EventArgs e)
@@ -123,11 +127,32 @@ namespace AMOS_V4
         }
         private void newFile(object sender, EventArgs e)
         {
-            quiz.NewLecture();
-            FileToBeNamed = true;
-            Refresh();
-            disableAllFilesButtons();
-            FilenameEntry.Focus();
+           
+            //FileToBeNamed = true;
+            //disableAllFilesButtons();
+            //FilenameEntry.Focus();
+            using (var saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "*.*|*.Amos|*.AMOS|"; //tohle nefunguje jak má
+                saveFileDialog.Title = "Nový balíček";
+                // Načtení uložené cesty z nastavení
+                saveFileDialog.InitialDirectory = string.IsNullOrEmpty(Settings.Default.LastOpenFilePath)
+                    ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    : Settings.Default.LastOpenFilePath;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    quiz.NewLecture();
+                    // Uložení naposledy použitého adresáře
+                    Settings.Default.LastOpenFilePath = System.IO.Path.GetDirectoryName(saveFileDialog.FileName);
+                    Settings.Default.Save();
+                    string path = saveFileDialog.FileName;
+                    bool isEmpty = quiz.Lectures.IsEmpty;
+
+                    quiz.Lectures.SetPath(quiz.Lectures.Count - 1, path);
+                    Refresh();
+                }
+            }
         }
         private void setFileName(object sender, EventArgs e)
         {
@@ -163,6 +188,12 @@ namespace AMOS_V4
             {
                 if (child != FilenameEntry) child.Enabled = true;
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            quiz.Lectures.SaveAll();
+            quiz.Lectures.UnloadAll();
         }
     }
 }

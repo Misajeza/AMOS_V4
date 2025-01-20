@@ -15,7 +15,6 @@ namespace AMOS_V4
     {
 
         Quiz quiz = new Quiz();
-        bool empty = true;
 
         int quizCardWidth = (int)Math.Round(Screen.PrimaryScreen.WorkingArea.Height * 0.61);
         int quizCardHeight = (int)Math.Round(Screen.PrimaryScreen.WorkingArea.Height * 0.78);
@@ -31,10 +30,12 @@ namespace AMOS_V4
             else { quizCard1.Show(); }
         }
         public Form1()
-        { 
+        {
             InitializeComponent();
-            MouseClick += clickSomewhere;
+            emptyFileDialog1.quiz = quiz;
             quizCard1.Quiz = quiz;
+            emptyFileDialog1.Hide();
+            MouseClick += clickSomewhere;
             quizCard1.NewLineButton.Click += AddLine_Click;
             Controls.Remove(quizCard1);
             sidePanel1.quiz = quiz;
@@ -45,9 +46,12 @@ namespace AMOS_V4
             quiz.LectureClosed += ChckAreLectures;
             quiz.LectureOpened += ChckAreLectures;
             quiz.LectureChanged += SelectionChanged;
+            quiz.LectureChanged += ChckEmptyFileDialog;
+            quiz.QuestionChanged += ChckEmptyFileDialog;
             quizCard1.EditorImageBox.button4.Click += addImage;
+            Refresh();
             //openFileDialog1.Filter  = "|*.amos|*.AMOS|*.Amos";
-            openImageDialog.Filter  = "|*.jpg|*.JPG|*.png";
+            //openImageDialog.Filter = "|*.jpg|*.JPG|*.png";
             //quizCard1 = new QuizCard(quiz);
             //sidePanel1 = new SidePanel(quiz);
         }
@@ -63,6 +67,12 @@ namespace AMOS_V4
                 case (Quiz.QuizMode.Edit):
                     quiz.RandomChangeSellection();
                     quizCard1.Refresh();
+                    break;
+
+                case (Quiz.QuizMode.Smart):
+                    quiz.RandomChangeSellection();
+                    quizCard1.Refresh();
+                    
                     break;
             }
 
@@ -115,9 +125,10 @@ namespace AMOS_V4
         }
         private void EditButtonOnClick(object sender, EventArgs e)
         {
+            ChckEmptyFileDialog(this, new EventArgs());
             if (quiz.Mode == Quiz.QuizMode.Edit)
             {
-                quiz.Mode = Quiz.QuizMode.Normal;
+                quiz.Mode = Quiz.QuizMode.Smart;
                 sidePanel1.button2.Text = "Upravit";
                 //quizCard1.button1.Click -= AddLine_Click;
                 //quizCard1.button1.Click += ChckAnswersButton_Click;
@@ -132,6 +143,7 @@ namespace AMOS_V4
             sidePanel1.Refresh();
             quizCard1.Refresh();
 
+
         }
         #endregion
         //QuestionCard Events
@@ -142,10 +154,15 @@ namespace AMOS_V4
             //    quizCard1.button1.Click += AddLine_Click;
             //else
             quizCard1.button1.Click += ChckAnswersButton_Click;
+            quizCard1.ChckAnswers += ChckAnswersButton_Click; 
         }
         private void ChckAnswersButton_Click(object sender, EventArgs e)
         {
-            if (quizCard1.CheckAnswers()) ChangeCard();
+            if (quizCard1.CheckAnswers())
+            {
+                ChangeCard();
+
+            }
         }
         private void AddLine_Click(object sender, EventArgs e)
         {
@@ -156,6 +173,10 @@ namespace AMOS_V4
         {
             if (!Controls.Contains(quizCard1) && !quiz.Lectures.IsEmpty) Controls.Add(quizCard1);
             quizCard1.Refresh();
+            if (quiz.Question == null)
+            {
+                emptyFileDialog1.Show();
+            }
         }
         private void addImage(object sender, EventArgs e)
         {
@@ -187,10 +208,10 @@ namespace AMOS_V4
                 }
             }
         }
-        private void clickSomewhere(object sender, EventArgs e) 
-        { 
+        private void clickSomewhere(object sender, EventArgs e)
+        {
             ActiveControl = null;
-            
+
         }
         #endregion
         //Form1 Events
@@ -209,6 +230,27 @@ namespace AMOS_V4
             if (quizCard1 != null)
                 sidePanel1.Width = quizCard1.Location.X;
         }
+        private void ChckEmptyFileDialog(object sender, EventArgs e)
+        {
+            if (quiz.SelectedLecture == null)
+                emptyFileDialog1.Hide();
+            else if (quiz.Question == null)
+                emptyFileDialog1.Show();
+            else
+                emptyFileDialog1.Hide();
+        }
         #endregion
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (quiz.Mode == Quiz.QuizMode.Edit)
+            {
+                if (MessageBox.Show("Přejete si uložit rozdělanou práci?", "Uložit?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    quiz.Lectures.SaveAll();
+                }
+            }
+            else quiz.Lectures.SaveAll();
+        }
     }
 }

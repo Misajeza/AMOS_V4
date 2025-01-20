@@ -96,6 +96,7 @@
             betterTextBox1.TextAlign = HorizontalAlignment.Center;
             betterTextBox1.Texts = "";
             betterTextBox1.UnderLinedStyle = true;
+            betterTextBox1._KeyDown += betterTextBox1__KeyDown;
             // 
             // QuizLine
             // 

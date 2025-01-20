@@ -24,8 +24,9 @@ namespace AMOS_V4.MyControls
             betterTextBox2.Texts = questionLine.Query;
             betterTextBox2._TextChanged += saveQuery;
             betterTextBox1._TextChanged += saveAnswers;
-            if (questionLine.Answer.Count() > 0)
-                betterTextBox1.Texts = questionLine.Answer[rand.Next(questionLine.Answer.Count())];
+            chckButtons();
+            betterTextBox1.Texts = string.Join("; ", questionLine.Answer);
+
         }
         public void saveQuery(object sender, EventArgs e)
         {
@@ -46,6 +47,29 @@ namespace AMOS_V4.MyControls
         {
             if (Close_Click != null)
                 Close_Click.Invoke(this, EventArgs.Empty);
+        }
+        private void chckButtons()
+        {
+            //if (questionLine.Swapable)
+            //    button1.BackColor = SystemColors.Control;
+            //else
+            //    button1.BackColor = Color.DarkGray;
+            if (questionLine.CharSize)
+                button2.BackColor = SystemColors.Control;
+            else
+                button2.BackColor = Color.DarkGray;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            questionLine.Swapable = !questionLine.Swapable;
+            chckButtons();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            questionLine.CharSize = !questionLine.CharSize;
+            chckButtons();
         }
     }
 }

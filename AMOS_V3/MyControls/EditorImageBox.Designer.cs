@@ -58,7 +58,7 @@
             button4.Name = "button4";
             button4.Size = new Size(197, 77);
             button4.TabIndex = 2;
-            button4.Text = "Přidat Obrázek";
+            button4.Text = "Přidat obrázek";
             button4.UseVisualStyleBackColor = true;
             // 
             // button3
@@ -137,6 +137,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(tableLayoutPanel1);
+            Margin = new Padding(0);
             MinimumSize = new Size(20, 20);
             Name = "EditorImageBox";
             Size = new Size(764, 760);

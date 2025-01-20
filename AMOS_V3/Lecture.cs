@@ -44,6 +44,8 @@ namespace AMOS_V4
         public List <string> ImageNames { get; set; }
         public List <QuestionLine> QuestionLines { get; set; }
 
+        public static Question Empty { get { return new Question("",5,new List<string>(), new List<QuestionLine>()); } }
+
         public void AddLine()
         {
             List<string> answers = new List<string>();
