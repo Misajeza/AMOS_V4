@@ -46,7 +46,6 @@ namespace AMOS_V4
                 if (!isRight && mark < 5) mark++;
                 return isRight;
             }
-            return QuestionLine.Answer.Contains(betterTextBox1.Texts.Trim());
         }
         public void Help()
         {

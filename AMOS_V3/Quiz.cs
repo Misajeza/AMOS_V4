@@ -17,6 +17,7 @@ namespace AMOS_V4
             Lectures = new Files();
             lastSelected = Question.Empty;
         }
+        
 
         //private List <string> LecturePaths = new List<string>();
 

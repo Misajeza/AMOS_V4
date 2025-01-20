@@ -16,6 +16,12 @@ namespace AMOS_V4
 
         Quiz quiz = new Quiz();
 
+        public void Open(string path)
+        {
+            quiz.OpenLecture(path);
+            ChangeCard();
+        }
+
         int quizCardWidth = (int)Math.Round(Screen.PrimaryScreen.WorkingArea.Height * 0.61);
         int quizCardHeight = (int)Math.Round(Screen.PrimaryScreen.WorkingArea.Height * 0.78);
         int minSidePanelWidth = Screen.PrimaryScreen.Bounds.Width / 10;
@@ -72,7 +78,7 @@ namespace AMOS_V4
                 case (Quiz.QuizMode.Smart):
                     quiz.RandomChangeSellection();
                     quizCard1.Refresh();
-                    
+
                     break;
             }
 
@@ -154,7 +160,7 @@ namespace AMOS_V4
             //    quizCard1.button1.Click += AddLine_Click;
             //else
             quizCard1.button1.Click += ChckAnswersButton_Click;
-            quizCard1.ChckAnswers += ChckAnswersButton_Click; 
+            quizCard1.ChckAnswers += ChckAnswersButton_Click;
         }
         private void ChckAnswersButton_Click(object sender, EventArgs e)
         {

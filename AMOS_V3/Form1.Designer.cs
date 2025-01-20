@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             openFileDialog1 = new OpenFileDialog();
             sidePanel1 = new SidePanel();
             quizCard1 = new QuizCard();
@@ -57,6 +58,7 @@
             // 
             // emptyFileDialog1
             // 
+            emptyFileDialog1.BackColor = Color.DarkGoldenrod;
             emptyFileDialog1.Location = new Point(449, 343);
             emptyFileDialog1.Name = "emptyFileDialog1";
             emptyFileDialog1.Size = new Size(518, 315);
@@ -70,9 +72,10 @@
             Controls.Add(emptyFileDialog1);
             Controls.Add(quizCard1);
             Controls.Add(sidePanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4);
             Name = "Form1";
-            Text = "Form1";
+            Text = "AMOS Automatický Memoračně Opakovací Systém";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             SizeChanged += Form1_SizeChanged;
