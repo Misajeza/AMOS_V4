@@ -207,10 +207,10 @@ namespace AMOS_V4
         {
             string fileName = Path.GetFileNameWithoutExtension(path);
             if (fileName != "") {
-                if (SelectedLecture.Images.ContainsKey(fileName))
+                if (SelectedLecture.Images.ContainsKey(fileName + ".jpg"))
                 {
                     int extension = 1;
-                    while (SelectedLecture.Images.ContainsKey(fileName+extension))  extension++;
+                    while (SelectedLecture.Images.ContainsKey(fileName+extension + ".jpg"))  extension++;
                     fileName += extension;
                 }
                 SelectedLecture.Images.Add(fileName + ".jpg", resize(new Bitmap(path), 720));

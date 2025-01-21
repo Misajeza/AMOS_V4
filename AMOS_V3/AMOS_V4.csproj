@@ -6,19 +6,12 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <PackageIcon>Amos.png</PackageIcon>
     <ApplicationIcon>Amos.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="Amos.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\Amos\Amos\Amos.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
   </ItemGroup>
 
   <ItemGroup>

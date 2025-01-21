@@ -193,7 +193,7 @@ namespace AMOS_V4
         private void button3_Click(object sender, EventArgs e)
         {
             quiz.Lectures.SaveAll();
-            quiz.Lectures.UnloadAll();
+            //quiz.Lectures.UnloadAll();
         }
     }
 }

@@ -98,7 +98,7 @@ namespace AMOS_V4
         {
             using (var openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Filter = "|*.amos|*.AMOS|*.Amos";
+                openFileDialog.Filter = "Amos files(*.AMOS)|*.AMOS";
                 openFileDialog.Multiselect = true;
                 // Načtení uložené cesty z nastavení
                 openFileDialog.InitialDirectory = string.IsNullOrEmpty(Settings.Default.LastOpenFilePath)
@@ -188,7 +188,7 @@ namespace AMOS_V4
         {
             using (var openImageDialog = new OpenFileDialog())
             {
-                openImageDialog.Filter = "*.*|*.jpg|*.png|"; //tohle nefunguje jak má
+                openImageDialog.Filter = "Image Files(*.BMP;*.JPG;*.JPEG*.GIF;*.PNG;)|*.BMP;*.JPG;*.JPEG*;*.GIF;*.PNG"; //tohle nefunguje jak má
                 openImageDialog.Title = "Importovat Obrázky";
                 openImageDialog.Multiselect = true;
                 // Načtení uložené cesty z nastavení

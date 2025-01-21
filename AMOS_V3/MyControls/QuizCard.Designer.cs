@@ -94,7 +94,7 @@ namespace AMOS_V4
             button1.Name = "button1";
             button1.Size = new Size(800, 48);
             button1.TabIndex = 2;
-            button1.Text = "button1";
+            button1.Text = "Zkontrolovat";
             button1.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel2
@@ -103,7 +103,7 @@ namespace AMOS_V4
             tableLayoutPanel2.ColumnCount = 4;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 54.0727921F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45.9272079F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 163F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 206F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 65F));
             tableLayoutPanel2.Controls.Add(button2, 3, 0);
             tableLayoutPanel2.Controls.Add(label1, 0, 0);
@@ -135,7 +135,7 @@ namespace AMOS_V4
             label1.Dock = DockStyle.Fill;
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(306, 37);
+            label1.Size = new Size(283, 37);
             label1.TabIndex = 3;
             label1.Text = "label1";
             // 
@@ -148,12 +148,12 @@ namespace AMOS_V4
             betterTextBox2.BorderSize = 2;
             betterTextBox2.FocusBorderColor = Color.White;
             betterTextBox2.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
-            betterTextBox2.Location = new Point(580, 3);
+            betterTextBox2.Location = new Point(537, 3);
             betterTextBox2.Multiline = false;
             betterTextBox2.Name = "betterTextBox2";
             betterTextBox2.Padding = new Padding(7);
             betterTextBox2.PasswordChar = false;
-            betterTextBox2.Size = new Size(157, 40);
+            betterTextBox2.Size = new Size(200, 40);
             betterTextBox2.TabIndex = 2;
             betterTextBox2.TextAlign = HorizontalAlignment.Center;
             betterTextBox2.Texts = "";
