@@ -249,7 +249,8 @@ namespace AMOS_V4
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (quiz.Lectures.Count > 0) {
+            if (quiz.Lectures.Count > 0)
+            {
                 if (quiz.Mode == Quiz.QuizMode.Edit)
                 {
                     if (MessageBox.Show("Přejete si uložit rozdělanou práci?", "Uložit?", MessageBoxButtons.YesNo) == DialogResult.Yes)
