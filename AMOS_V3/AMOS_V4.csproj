@@ -11,7 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="AmosSoubor.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Amos.ico" />
+    <Content Include="AmosSoubor.ico" />
   </ItemGroup>
 
   <ItemGroup>
