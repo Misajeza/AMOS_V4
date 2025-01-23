@@ -19,7 +19,7 @@ namespace AMOS_V4
             //// To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             //CreateTestFile.Create();
-            //LoadBiODatabase.Load("C:\\Users\\42073\\Pictures\\data-poznavacka BiO AB-20250109T083551Z-001\\data-poznavacka BiO AB\\mammalia", "C:\\Users\\42073\\Pictures\\data-poznavacka BiO AB-20250109T083551Z-001\\Amos-poznavacka BiO AB\\l.Amos");
+            //LoadBiODatabase.Load("C:\\Users\\42073\\Pictures\\data-poznavacka BiO AB-20250109T083551Z-001\\data-poznavacka BiO AB\\amosunzipSpermatophyta", "C:\\Users\\42073\\Pictures\\data-poznavacka BiO AB-20250109T083551Z-001\\Amos-poznavacka BiO AB\\spermatophyta.Amos");
 
             ApplicationConfiguration.Initialize();
             

@@ -46,19 +46,27 @@ public class AmosFile
     // Načtení JSONu ze zipu
     public T ReadJson<T>()
     {
-        using (var zipStream = new FileStream(ZipFilePath, FileMode.Open))
-        using (var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read))
+        try
         {
-            var jsonEntry = zipArchive.GetEntry("data.json");
-            if (jsonEntry == null)
-                throw new FileNotFoundException("JSON file not found in the zip.");
-
-            using (var entryStream = jsonEntry.Open())
-            using (var reader = new StreamReader(entryStream))
+            using (var zipStream = new FileStream(ZipFilePath, FileMode.Open))
+            using (var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read))
             {
-                string json = reader.ReadToEnd();
-                return JsonSerializer.Deserialize<T>(json);
+                var jsonEntry = zipArchive.GetEntry("data.json");
+                if (jsonEntry == null)
+                    throw new FileNotFoundException("JSON file not found in the zip.");
+
+                using (var entryStream = jsonEntry.Open())
+                using (var reader = new StreamReader(entryStream))
+                {
+                    string json = reader.ReadToEnd();
+                    return JsonSerializer.Deserialize<T>(json);
+                }
             }
+        }
+        catch 
+        {
+            MessageBox.Show("Soubor není podporovaný nebo je poškozený");
+            throw new Exception("File is not supported or is corrupted");
         }
     }
 

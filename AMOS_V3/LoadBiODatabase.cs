@@ -83,7 +83,8 @@ namespace AMOS_V4
                     while (SelectedLecture.Images.ContainsKey(fileName + extension)) extension++;
                     fileName += extension;
                 }
-                SelectedLecture.Images.Add(fileName + ".jpg", resize(new Bitmap(path), 720));
+                SelectedLecture.Images.Add(fileName + ".jpg", new Bitmap(path));
+                //SelectedLecture.Images.Add(fileName + ".jpg", resize(new Bitmap(path), 720));
                 //Question.ImageNames.Add(Path.GetFileName(fileName + ".jpg"));
                 
             }
