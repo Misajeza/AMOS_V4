@@ -22,10 +22,11 @@ namespace AMOS_V4
             //LoadBiODatabase.Load("C:\\Users\\42073\\Pictures\\data-poznavacka BiO AB-20250109T083551Z-001\\data-poznavacka BiO AB\\amosunzipSpermatophyta", "C:\\Users\\42073\\Pictures\\data-poznavacka BiO AB-20250109T083551Z-001\\Amos-poznavacka BiO AB\\spermatophyta.Amos");
 
             ApplicationConfiguration.Initialize();
-            
+            //string[] activationData = AppDomain.CurrentDomain.SetupInformation.
             if (args.Length > 0)
             {
                 Form1 aplication = new Form1();
+                MessageBox.Show(args[0]);
                 string filePath = args[0];
 
                 if (File.Exists(filePath))
